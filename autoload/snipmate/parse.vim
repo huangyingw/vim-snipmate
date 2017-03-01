@@ -78,9 +78,19 @@ function! s:parser_varend() dict abort
         call extend(ret, self.placeholder())
     elseif self.same('/')
         call add(ret, self.subst())
+    elseif self.next == '|'
+        call add(ret, self.select())
     endif
     call self.same('}')
     return ret
+endfunction
+
+function! s:parser_select() dict abort
+    let items = []
+    while self.same('|')
+        call add(items, self.string('|}'))
+    endwhile
+    return ['select'] + items
 endfunction
 
 function! s:parser_placeholder() dict abort
@@ -254,11 +264,19 @@ endfunction
 function! s:parser_create_stubs() dict abort
 
     for [id, dict] in items(self.vars)
+
         for i in dict.instances
             if len(i) > 1 && type(i[1]) != type({})
                 if !has_key(dict, 'placeholder')
-                    let dict.placeholder = i[1:]
-                    call add(i, dict)
+                    if type(i[1]) == type([]) && i[1][0] == 'select'
+                        let dict.placeholder = i[1][1]
+                        let dict.items = i[1][1:]
+                        let i[1] = dict.placeholder
+                        call add(i, dict)
+                    else
+                        let dict.placeholder = i[1:]
+                        call add(i, dict)
+                    endif
                 else
                     unlet i[1:]
                     call s:create_mirror_stub(i, dict)
@@ -267,6 +285,7 @@ function! s:parser_create_stubs() dict abort
                 call s:create_mirror_stub(i, dict)
             endif
         endfor
+
         if !has_key(dict, 'placeholder')
             let dict.placeholder = []
             let j = 0
@@ -278,6 +297,7 @@ function! s:parser_create_stubs() dict abort
             call add(dict.instances[j], dict)
             call filter(dict.mirrors, 'v:val isnot oldstub')
         endif
+
         unlet dict.instances
     endfor
 
@@ -304,6 +324,6 @@ endfunction
 
 call extend(s:parser_proto, snipmate#util#add_methods(s:sfile(), 'parser',
             \ [ 'advance', 'same', 'id', 'add_var', 'var', 'varend',
-            \   'line', 'string', 'create_stubs', 'pat',
+            \   'line', 'string', 'create_stubs', 'pat', 'select',
             \   'placeholder', 'subst', 'expr', 'text', 'parse',
             \ ]), 'error')

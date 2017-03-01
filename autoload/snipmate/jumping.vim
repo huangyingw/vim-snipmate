@@ -46,7 +46,11 @@ function! s:state_set_stop(backwards) dict abort
 	call cursor(self.cur_stop.line, self.cur_stop.col)
 	let self.prev_len    = col('$')
 	let self.changed = 0
-	let ret = self.select_word()
+	if exists("self.cur_stop.items")
+		let ret = self.select_item()
+	else
+		let ret = self.select_word()
+	endif
 	if (self.stop_no == 0 || self.stop_no == self.stop_count - 1) && !a:backwards
 		call self.remove()
 	endif
@@ -149,30 +153,14 @@ function! s:state_update_mirrors(change) dict abort
 			let oldSize = strlen(newWord)
 		endif
 
-		" Split the line into three parts: the mirror, what's before it, and
-		" what's after it. Then combine them using the new mirror string.
-		" Subtract one to go from column index to byte index
-
-		let theline = getline(mirror.line)
-
-		" part before the current mirror
-		let beginline  = strpart(theline, 0, mirror.col - 1)
-
 		" current mirror transformation, and save size
 		let wordMirror= substitute(newWord, get(mirror, 'pat', ''), get(mirror, 'sub', ''), get(mirror, 'flags', ''))
 		let mirror.oldSize = strlen(wordMirror)
 
-		" end of the line, use the oldSize because with the transformation,
-		" the size of the mirror can be different from those of the snippet
-		let endline    = strpart(theline, mirror.col + oldSize -1)
-
-		" Update other object on the line
+		" Update other objects on the line
 		call self.update(mirror, changeLen, mirror.oldSize - oldSize)
 
-		" reconstruct the line
-		let update = beginline.wordMirror.endline
-
-		call setline(mirror.line, update)
+		call s:set_line(mirror.line, mirror.col, oldSize, wordMirror)
 	endfor
 
 	" Reposition the cursor in case a var updates on the same line but before
@@ -220,9 +208,25 @@ function! s:state_update(item, change_len, mirror_change) dict abort
 	endfor
 endfunction
 
+" Split the line into three parts: the mirror, what's before it, and
+" what's after it. Then combine them using the new mirror string.
+" Subtract one to go from column index to byte index
+function! s:set_line(line, col, len, word)
+	let theline = getline(a:line)
+	let begin = strpart(theline, 0, a:col - 1)
+	let end = strpart(theline, a:col + a:len - 1)
+	call setline(a:line, begin . a:word . end)
+endfunction
+
+function! s:state_select_item() dict abort
+	call s:set_line(line('.'), self.start_col, self.end_col - self.start_col, '')
+	call complete(self.start_col, self.cur_stop.items)
+	return ''
+endfunction
+
 call extend(s:state_proto, snipmate#util#add_methods(s:sfile(), 'state',
 			\ [ 'remove', 'set_stop', 'jump_stop', 'remove_nested',
-			\ 'select_word', 'update_changes', 'update_mirrors',
+			\ 'select_word', 'update_changes', 'update_mirrors', 'select_item',
 			\ 'find_next_stop', 'find_update_objects', 'update' ]), 'error')
 
 " vim:noet:sw=4:ts=4:ft=vim
