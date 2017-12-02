@@ -175,7 +175,7 @@ function! s:build_loc_info(snippet, stops, lnum, col, seen_items) abort
 			let stub.col = col
 			call s:add_update_objects(stub, seen_items)
 
-			if len(item) > 2 && type(item[1]) != type({})
+			if len(item) > 2 && type(item[1]) != type({}) && !exists('stub.items')
 				let col = s:build_loc_info(item[1:-2], stops, lnum, col, seen_items)
 			else
 				let col += len(snipMate#placeholder_str(id, stops))

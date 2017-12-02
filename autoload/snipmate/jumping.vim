@@ -71,6 +71,13 @@ function! s:state_jump_stop(backwards) dict abort
 		unlet! self.cur_stop.placeholder " avoid type error for old parsing version
 		let self.cur_stop.placeholder = [strpart(getline('.'),
 					\ self.start_col - 1, self.end_col - self.start_col)]
+
+		" Remove selection items if the stop has changed and the new placeholder
+		" is not one of the selection items
+		if exists('self.cur_stop.items') &&
+					\ !count(self.cur_stop.items, self.cur_stop.placeholder[0])
+			call remove(self.cur_stop, 'items')
+		endif
 	endif
 
 	return self.set_stop(a:backwards)

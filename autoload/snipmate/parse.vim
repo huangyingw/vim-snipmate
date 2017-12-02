@@ -88,7 +88,8 @@ endfunction
 function! s:parser_select() dict abort
     let items = []
     while self.same('|')
-        call add(items, self.string('|}'))
+        let str = self.text('|}')
+        call add(items, str[0])
     endwhile
     return ['select'] + items
 endfunction
@@ -181,6 +182,7 @@ endfunction
 
 function! s:parser_text(till) dict abort
     let ret = []
+    let till = '\V\[' . escape(a:till, '\') . ']'
 
     while self.pos < self.len
         let lines = []
@@ -207,7 +209,7 @@ function! s:parser_text(till) dict abort
         endif
 
         " Empty lines are ignored if this is tested at the start of an iteration
-        if self.next ==# a:till
+        if self.next =~# till
             break
         endif
     endwhile
