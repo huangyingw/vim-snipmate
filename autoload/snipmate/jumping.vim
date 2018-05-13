@@ -226,8 +226,9 @@ function! s:set_line(line, col, len, word)
 endfunction
 
 function! s:state_select_item() dict abort
+	let items = map(copy(self.cur_stop.items), 'snipMate#sniplist_str(v:val, b:snip_state.stops)')
 	call s:set_line(line('.'), self.start_col, self.end_col - self.start_col, '')
-	call complete(self.start_col, self.cur_stop.items)
+	call complete(self.start_col, items)
 	return ''
 endfunction
 
