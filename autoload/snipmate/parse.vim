@@ -89,9 +89,19 @@ function! s:parser_select() dict abort
     let items = []
     while self.same('|')
         let str = self.text('|}')
-        call add(items, str[0])
+        call s:mark_vars_in_select(str)
+        call add(items, str)
     endwhile
     return ['select'] + items
+endfunction
+
+function! s:mark_vars_in_select(str)
+    for item in a:str
+        if type(item) == type([])
+            call add(item, { 'select' : 1 })
+        endif
+        unlet! item " avoid E706
+    endfor
 endfunction
 
 function! s:parser_placeholder() dict abort
@@ -267,6 +277,13 @@ function! s:parser_create_stubs() dict abort
 
     for [id, dict] in items(self.vars)
 
+        " only instance is in a selection, so remove it
+        if len(dict.instances) == 1 && type(dict.instances[0][-1]) == type({})
+                    \ && dict.instances[0][-1] == { 'select' : 1 }
+            call remove(self.vars, id)
+            continue
+        endif
+
         for i in dict.instances
             if len(i) > 1 && type(i[1]) != type({})
                 if !has_key(dict, 'placeholder')
@@ -309,9 +326,13 @@ function! s:create_mirror_stub(mirror, dict)
     let mirror = a:mirror
     let dict = a:dict
     let stub = get(mirror, 1, {})
-    call add(mirror, stub)
-    let dict.mirrors = get(dict, 'mirrors', [])
-    call add(dict.mirrors, stub)
+    if stub == { 'select' : 1 }
+        unlet mirror[1:]
+    else
+        call add(mirror, stub)
+        let dict.mirrors = get(dict, 'mirrors', [])
+        call add(dict.mirrors, stub)
+    endif
 endfunction
 
 function! snipmate#parse#snippet(text, ...) abort
