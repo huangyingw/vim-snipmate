@@ -102,7 +102,7 @@ function! s:insert_snippet_text(snippet, lnum, col, indent)
 endfunction
 
 function! snipMate#placeholder_str(num, stops) abort
-	return snipMate#sniplist_str(a:stops[a:num].placeholder, a:stops)
+	return snipMate#sniplist_str(get(get(a:stops, a:num, {}), 'placeholder', []), a:stops)
 endfunction
 
 function! snipMate#sniplist_str(snippet, stops) abort
