@@ -187,7 +187,9 @@ function! s:state_find_update_objects(item) dict abort
 			call add(item.update_objects, stop)
 		endif
 
+		let placeholder_len = len(snipMate#sniplist_str(stop.placeholder, b:snip_state.stops))
 		for mirror in get(stop, 'mirrors', [])
+			let mirror.oldSize = placeholder_len
 			if mirror.line == item.line && mirror.col > item.col
 				call add(item.update_objects, mirror)
 			endif
