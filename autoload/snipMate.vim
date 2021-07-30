@@ -338,7 +338,6 @@ endfunction
 
 function! s:snippet_filenames(scope, trigger) abort
 	let mid = ['', '_*', '/*']
-	let mid += map(copy(mid), "'/' . a:trigger . '*' . v:val")
 	call map(mid, "'snippets/' . a:scope . v:val . '.snippet'")
 	return map(mid[:2], 'v:val . "s"') + mid[3:]
 endfunction
