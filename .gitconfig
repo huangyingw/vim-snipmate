@@ -1,0 +1,11 @@
+[remote "origin"]
+	url = git@github.com:huangyingw/vim-snipmate.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[remote "garbas"]
+	url = git@github.com:garbas/vim-snipmate.git
+	fetch = +refs/heads/*:refs/remotes/garbas/*
+[push]
+    remote = origin
+[gsync]
+    remote = garbas
+    target = garbas/master
