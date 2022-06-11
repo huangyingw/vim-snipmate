@@ -242,7 +242,8 @@ snippets: >
 
 where <scope> is a scope or 'filetype' or 'syntax', <name> is an arbitrary
 name, <trigger> is the trigger for a snippet, and <description> is
-a description used for |SnipMate-multisnip|.
+a description used for |SnipMate-multisnip|. Snippets in the `_` scope (for
+example `.../snippets/_.snippets`) are loaded for all filetypes.
 
 A .snippet file defines a single snippet with the trigger (and description)
 determined by the filename. The entire contents of the file are used as the
