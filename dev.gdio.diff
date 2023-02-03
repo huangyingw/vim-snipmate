@@ -1,5 +1,4 @@
 diff --git a/plugin/snipMate.vim b/plugin/snipMate.vim
-index 068791e..75e74aa 100644
 --- ./plugin/snipMate.vim
 +++ ./plugin/snipMate.vim
 @@ -57,10 +57,6 @@ endif
