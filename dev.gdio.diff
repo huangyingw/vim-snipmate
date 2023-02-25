@@ -1,3 +1,19 @@
+diff --git a/.gitconfig b/.gitconfig
+new file mode 100644
+--- /dev/null
++++ ./.gitconfig
+@@ -0,0 +1,11 @@
++[remote "origin"]
++	url = git@github.com:huangyingw/vim-snipmate.git
++	fetch = +refs/heads/*:refs/remotes/origin/*
++[remote "garbas"]
++	url = git@github.com:garbas/vim-snipmate.git
++	fetch = +refs/heads/*:refs/remotes/garbas/*
++[push]
++    remote = origin
++[gsync]
++    remote = garbas
++    target = garbas/master
 diff --git a/plugin/snipMate.vim b/plugin/snipMate.vim
 --- ./plugin/snipMate.vim
 +++ ./plugin/snipMate.vim
