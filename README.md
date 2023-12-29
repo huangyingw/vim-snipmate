@@ -17,38 +17,26 @@ Garbas][garbas], [Marc Weber][marcweber], and [Adnan Zafar][ajzafar].
 
 ## Installing SnipMate ##
 
-We recommend one of the following methods for installing SnipMate and its
-dependencies. SnipMate depends on [vim-addon-mw-utils][mw-utils] and
-[tlib][tlib].
+SnipMate can be installed using a package manager or using Vim's built-in
+package handling. It does depend on [vim-addon-mw-utils][mw-utils] and
+[tlib][tlib]. For example, to use Vim's built-in support,
+
+    % mkdir -p ~/.vim/pack/SnipMate/start
+    % git clone https://github.com/tomtom/tlib_vim.git
+    % git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
+    % git clone https://github.com/tomtom/tlib_vim.git
+
+    # Optional:
+    % git clone https://github.com/honza/vim-snippets.git
 
 > **NOTE:** SnipMate does not ship with any snippets out of the box. We suggest
 looking at the [vim-snippets][vim-snippets] repository.
 
-* Using [VAM][vam], add `vim-snippets` to the list of packages to be installed.
-
-* Using [Pathogen][pathogen], run the following commands:
-
-        % cd ~/.vim/bundle
-        % git clone https://github.com/tomtom/tlib_vim.git
-        % git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
-        % git clone https://github.com/garbas/vim-snipmate.git
-
-        # Optional:
-        % git clone https://github.com/honza/vim-snippets.git
-
-* Using [Vundle][vundle], add the following to your `vimrc` then run
-  `:PluginInstall`
-
-        Plugin 'MarcWeber/vim-addon-mw-utils'
-        Plugin 'tomtom/tlib_vim'
-        Plugin 'garbas/vim-snipmate'
-
-        " Optional:
-        Plugin 'honza/vim-snippets'
-
 ## Using SnipMate ##
-Press <tab> and try :SnipMateOpenSnippetFiles for starting.
-Also see doc/SnipMate.txt to learn all SnipMate
+
+Install and create some snippets (see `:h SnipMate-snippets`). Then type in the
+trigger for one in the correct filetype and hit the expansion key (by default
+bound to `<Tab>`).
 
 ## FAQ ##
 
