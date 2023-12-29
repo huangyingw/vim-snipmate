@@ -20,6 +20,8 @@ function! snipMate#expandSnip(snip, version, col) abort
 
 	if a:version == 1
 		let [snippet, b:snip_state.stops] = snipmate#parse#snippet(a:snip)
+		" only if zero stop doesn't exist
+		call s:add_zero_stop(snippet, b:snip_state.stops)
 		" Build stop/mirror info
 		let b:snip_state.stop_count = s:build_stops(snippet, b:snip_state.stops, lnum, col, indent)
 	else
@@ -49,6 +51,14 @@ function! snipMate#expandSnip(snip, version, col) abort
 
 	let b:snip_state.stop_no = 0
 	return b:snip_state.set_stop(0)
+endfunction
+
+function! s:add_zero_stop(snippet, stops) abort
+	if !exists("a:stops['0']")
+		let zero_stop = {'mirrors': [], 'placeholder': []}
+		call extend(a:snippet[-1], [[0, '', zero_stop]])
+		call extend(a:stops, {'0': zero_stop}, 'keep')
+	endif
 endfunction
 
 function! s:insert_snippet_text(snippet, lnum, col, indent)
@@ -141,10 +151,6 @@ function! s:build_stops(snippet, stops, lnum, col, indent) abort
 		endif
 	endfor
 
-	" add zero tabstop if it doesn't exist and then link it to the highest stop
-	" number
-	let stops[0] = get(stops, 0,
-				\ { 'placeholder' : [], 'line' : lnum, 'col' : col })
 	let stop_count = max(keys(stops)) + 2
 	let stops[stop_count - 1] = stops[0]
 
@@ -169,6 +175,7 @@ function! s:build_loc_info(snippet, stops, lnum, col, seen_items) abort
 			let stub.col = col
 			call s:add_update_objects(stub, seen_items)
 
+			" if we've found a stop?
 			if len(item) > 2 && type(item[1]) != type({})
 				let col = s:build_loc_info(item[1:-2], stops, lnum, col, seen_items)
 			else
