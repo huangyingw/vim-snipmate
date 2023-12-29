@@ -3,12 +3,6 @@ if !exists('g:snipMate')
   let g:snipMate = {}
 endif
 
-try
-	call tlib#input#List('mi', '', [])
-catch /.*/
-	echoe "tlib is missing. See install instructions at ".expand('<sfile>:h:h').'/README.md'
-endtry
-
 fun! Filename(...) abort
 	let filename = expand('%:t:r')
 	if filename == '' | return a:0 == 2 ? a:2 : '' | endif
@@ -421,6 +415,12 @@ function! s:snippet_dirs() abort
 endfunction
 
 function! snipMate#OpenSnippetFiles() abort
+	if !exists('g:loaded_tlib') || g:loaded_tlib < 41
+		echom 'tlib is required for this command. '
+					\ . 'Remember to run :packadd if necessary.'
+		return
+	endif
+
 	let files = []
 	let scopes_done = []
 	let exists = []
@@ -448,15 +448,27 @@ fun! snipMate#ScopesByFile() abort
 	return filter(funcref#Call(g:snipMate.get_scopes), "v:val != ''")
 endf
 
+function! snipMate#flatten_filter_empty(list) abort
+	let result = []
+	for item in a:list
+		if type(item) == type([])
+			call extend(result, snipMate#flatten_filter_empty(item))
+		elseif !empty(item)
+			call extend(result, [item])
+		endif
+		unlet item " Avoid E706
+	endfor
+	return result
+endf
+
 " used by both: completion and insert snippet
 fun! snipMate#GetSnippetsForWordBelowCursor(word, exact) abort
 	" Split non-word characters into their own piece
 	" so 'foo.bar..baz' becomes ['foo', '.', 'bar', '.', '.', 'baz']
 	" First split just after a \W and then split each resultant string just
 	" before a \W
-	let parts = filter(tlib#list#Flatten(
-				\ map(split(a:word, '\W\zs'), 'split(v:val, "\\ze\\W")')),
-				\ '!empty(v:val)')
+	let parts = snipMate#flatten_filter_empty(
+				\ map(split(a:word, '\W\zs'), 'split(v:val, "\\ze\\W")'))
 	" Only look at the last few possibilities. Too many can be slow.
 	if len(parts) > 5
 		let parts = parts[-5:]
@@ -504,18 +516,17 @@ fun! s:ChooseSnippet(snippets) abort
 		let snippet += [i.'. '.snip]
 		let i += 1
 	endfor
-	if len(snippet) == 1 || get(g:snipMate, 'always_choose_first', 0) == 1
-		" there's only a single snippet, choose it
-		let idx = 0
-	else
-		let idx = tlib#input#List('si','select snippet by name',snippet) -1
-		if idx == -1
-			return ''
+	let i = 0
+	if len(snippet) > 1 && get(g:snipMate, 'always_choose_first', 0) != 1
+		if exists('g:loaded_tlib') && g:loaded_tlib >= 41
+			let i = tlib#input#List('si','select snippet by name',snippet) - 1
+		else
+			let i = inputlist(snippet + ['Select a snippet by number']) - 1
 		endif
 	endif
 	" if a:snippets[..] is a String Call returns it
 	" If it's a function or a function string the result is returned
-	return funcref#Call(a:snippets[keys(a:snippets)[idx]])
+	return (i == -1) ? '' : funcref#Call(a:snippets[keys(a:snippets)[i]])
 endf
 
 fun! snipMate#WordBelowCursor() abort

@@ -19,18 +19,21 @@ Garbas][garbas], [Marc Weber][marcweber], and [Adnan Zafar][ajzafar].
 
 SnipMate can be installed using a package manager or using Vim's built-in
 package handling. It does depend on [vim-addon-mw-utils][mw-utils] and
-[tlib][tlib]. For example, to use Vim's built-in support,
+optionally [tlib][tlib]. For example, to use Vim's built-in support,
 
     % mkdir -p ~/.vim/pack/SnipMate/start
     % git clone https://github.com/tomtom/tlib_vim.git
     % git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
-    % git clone https://github.com/tomtom/tlib_vim.git
 
     # Optional:
+    % git clone https://github.com/tomtom/tlib_vim.git
     % git clone https://github.com/honza/vim-snippets.git
 
 > **NOTE:** SnipMate does not ship with any snippets out of the box. We suggest
 looking at the [vim-snippets][vim-snippets] repository.
+
+If tlib is enabled, it is used for multisnip (`:h SnipMate-multisnip`). It's
+also required for the `:SnipMateOpenSnippetFiles` command.
 
 ## Using SnipMate ##
 
@@ -106,6 +109,10 @@ be found in the docs at `:h SnipMate-parser-versions`.
 
 Some changes listed here were contributed by non-maintainers. A full list can be
 found at [Contributors.md](Contributors.md).
+
+### Current ###
+
+- Make tlib an optional dependency.
 
 ### 0.90 - 2023-12-29 ###
 

@@ -17,7 +17,7 @@ For Vim version 7.0 or later.
 This plugin only works if 'compatible' is not set.
 {Vi does not have any of these features.}
 
-SnipMate depends on vim-addon-mw-utils and tlib.
+SnipMate depends on vim-addon-mw-utils and optionally on tlib.
 
 ==============================================================================
 DESCRIPTION                                             *SnipMate-description*
@@ -74,6 +74,9 @@ Commands~
                                 Only existing files and non-existing .snippets
                                 files will be shown, with the existing files
                                 shown first.
+
+                                The optional dependency tlib is required for
+                                this command to work.
 
 :SnipMateLoadScope[!] scope [scope ...]
                                 Load snippets from additional scopes. Without
