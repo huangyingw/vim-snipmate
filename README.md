@@ -104,6 +104,16 @@ be found in the docs at `:h SnipMate-parser-versions`.
 
 ## Release Notes ##
 
+Some changes listed here were contributed by non-maintainers. A full list can be
+found at [Contributors.md](Contributors.md).
+
+### 0.90 - 2023-12-29 ###
+
+- Remove empty lines at the end of a `${VISUAL}` expansion
+- Fix code for opening folds when expanding a snippet
+- Deprecate legacy snippet parser
+- Fix jumps when `&sel == 'exclusive'`
+
 ### 0.89 - 2016-05-29 ###
 
 * Various regex updates to legacy parser
