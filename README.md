@@ -22,7 +22,8 @@ package handling. It does depend on [vim-addon-mw-utils][mw-utils] and
 optionally [tlib][tlib]. For example, to use Vim's built-in support,
 
     % mkdir -p ~/.vim/pack/SnipMate/start
-    % git clone https://github.com/tomtom/tlib_vim.git
+    % cd ~/.vim/pack/SnipMate/start
+    % git clone https://github.com/garbas/vim-snipmate.git
     % git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
 
     # Optional:
@@ -34,6 +35,8 @@ looking at the [vim-snippets][vim-snippets] repository.
 
 If tlib is enabled, it is used for multisnip (`:h SnipMate-multisnip`). It's
 also required for the `:SnipMateOpenSnippetFiles` command.
+
+Remember to run `:helptags ALL` once your Vim has loaded SnipMate!
 
 ## Using SnipMate ##
 
