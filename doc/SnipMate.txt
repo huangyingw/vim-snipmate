@@ -244,7 +244,7 @@ SnipTriggerPost                                     *SnipMate-SnipTriggerPost*
                 containining the WORD before the cursor when snippet
                 triggering began, and b:snip_lookups, a |List| containing all
                 possible lookups that SnipMate should try as possible
-                triggers.
+                triggers. They are tried in order from the beginning.
 
                 If SnipTriggerPre runs and puts anything in b:snip_lookups,
                 SnipMate's normal lookups will not be tried. SnipTriggerPost
