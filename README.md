@@ -116,6 +116,7 @@ found at [Contributors.md](Contributors.md).
 ### Current ###
 
 - Make tlib an optional dependency.
+- Add SnipLookupPre and SnipLookupPost autocommand events
 
 ### 0.90 - 2023-12-29 ###
 
