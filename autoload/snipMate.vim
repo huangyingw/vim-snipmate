@@ -468,8 +468,31 @@ function! snipMate#flatten_filter_empty(list) abort
 	return result
 endf
 
-" used by both: completion and insert snippet
-fun! snipMate#GetSnippetsForWordBelowCursor(word, exact) abort
+function! s:determine_lookups(word) abort
+	let b:snip_word = a:word
+
+	" gather any lookups from the Pre au
+	if exists('#User#SnipLookupPre')
+		doautocmd User <nomodeline> SnipLookupPre
+	endif
+
+	" If none are found, add the standard lookups
+	if !exists('b:snip_lookups') || empty(b:snip_lookups)
+		let b:snip_lookups = s:standard_lookups(b:snip_word)
+	endif
+
+	" Run the Post au
+	if exists('#User#SnipLookupPost')
+		doautocmd <nomodeline> User SnipLookupPost
+	endif
+
+	" return the appropriate data, deleting buffer variables.
+	let ret = b:snip_lookups
+	unlet! b:snip_lookups b:snip_word
+	return ret
+endfunction
+
+function! s:standard_lookups(word) abort
 	" Split non-word characters into their own piece
 	" so 'foo.bar..baz' becomes ['foo', '.', 'bar', '.', '.', 'baz']
 	" First split just after a \W and then split each resultant string just
@@ -488,7 +511,12 @@ fun! snipMate#GetSnippetsForWordBelowCursor(word, exact) abort
 			call add(lookups, lookup)
 		endif
 	endfor
+	return lookups
+endfunction
 
+" used by both: completion and insert snippet
+fun! snipMate#GetSnippetsForWordBelowCursor(word, exact) abort
+	let lookups = s:determine_lookups(a:word)
 	" Remove empty lookup entries, but only if there are other nonempty lookups
 	if len(lookups) > 1
 		call filter(lookups, 'v:val != ""')
