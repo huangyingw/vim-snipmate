@@ -14,7 +14,6 @@ Originally authored by [Michael Sanders][msanders], SnipMate was forked in 2011
 after a stagnation in development. This fork is currently maintained by [Rok
 Garbas][garbas], [Marc Weber][marcweber], and [Adnan Zafar][ajzafar].
 
-
 ## Installing SnipMate ##
 
 SnipMate can be installed using a package manager or using Vim's built-in
@@ -117,6 +116,7 @@ found at [Contributors.md](Contributors.md).
 
 - Make tlib an optional dependency.
 - Add SnipLookupPre and SnipLookupPost autocommand events
+- Make version 1 of the snippet parser the default with no message
 
 ### 0.90 - 2023-12-29 ###
 

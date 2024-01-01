@@ -212,7 +212,7 @@ fun! snipMate#ReadSnippetsFile(file) abort
 	if !filereadable(a:file) | return [result, new_scopes] | endif
 	let inSnip = 0
 	let line_no = 0
-	let snipversion = get(g:snipMate, 'snippet_version', 0)
+	let snipversion = get(g:snipMate, 'snippet_version', 1)
 	for line in readfile(a:file) + ["\n"]
 		let line_no += 1
 
@@ -309,7 +309,7 @@ function! s:source_snippet() abort
 	let new_snips = []
 	if fnamemodify(file, ':e') == 'snippet'
 		call add(new_snips, [trigger, desc, join(readfile(file), "\n"), 0,
-					\ get(g:snipMate, 'snippet_version', 0)])
+					\ get(g:snipMate, 'snippet_version', 1)])
 	else
 		let [snippets, extends] = s:CachedSnips(file)
 		let new_snips = deepcopy(snippets)
