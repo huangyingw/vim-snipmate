@@ -75,7 +75,7 @@ function! s:state_jump_stop(backwards) dict abort
 		" Remove selection items if the stop has changed and the new placeholder
 		" is not one of the selection items
 		if exists('self.cur_stop.items') &&
-					\ !count(self.cur_stop.items, self.cur_stop.placeholder[0])
+					\ !count(self.cur_stop.items, self.cur_stop.placeholder)
 			call remove(self.cur_stop, 'items')
 		endif
 	endif
