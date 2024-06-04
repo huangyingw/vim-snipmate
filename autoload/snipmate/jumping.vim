@@ -233,6 +233,9 @@ function! s:state_select_item() dict abort
 	let items = map(copy(self.cur_stop.items), 'snipMate#sniplist_str(v:val, b:snip_state.stops)')
 	call s:set_line(line('.'), self.start_col, self.end_col - self.start_col, '')
 	call complete(self.start_col, items)
+	for i in range(index(self.cur_stop.items, self.cur_stop.placeholder) + 1)
+		call feedkeys("\<C-N>")
+	endfor
 	return ''
 endfunction
 
